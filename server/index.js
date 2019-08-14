@@ -14,6 +14,12 @@ const port = process.env.PORT || 3000
 app.listen(port, ()=> {
   console.log(`Server listening on port ${port}`)
   const i2c1 = i2c.openSync(1)
-  i2c1.writeByteSync(0x04,0x04,0x08)
+  i2c1.writeByteSync(0x04,0x08,0x01)
+  setTimeout(()=>{
+    const value = i2c1.readByteSync(0x04,0x09)
+    console.log(value)
+  },3000)
+  i2c1.closeSync()
+
 })
 
