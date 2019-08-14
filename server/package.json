@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
+    "i2c-bus": "^4.0.10",
     "volleyball": "^1.5.1"
   },
   "devDependencies": {

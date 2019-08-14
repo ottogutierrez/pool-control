@@ -1,5 +1,6 @@
 const express = require('express')
 const volleybal = require('volleyball')
+const i2c = require('i2c-bus')
 
 const app = express()
 app.use(volleybal)
@@ -10,5 +11,9 @@ const port = process.env.PORT || 3000
 //     res.json("Hello from server")
 // })
 
-app.listen(port, ()=> console.log(`Server listening on port ${port}`))
+app.listen(port, ()=> {
+  console.log(`Server listening on port ${port}`)
+  const i2c1 = i2c.openSync(1)
+  i2c1.writeByteSync(0x04,0x04,0x08)
+})
 
