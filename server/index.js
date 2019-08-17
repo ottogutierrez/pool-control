@@ -1,16 +1,18 @@
 const express = require('express')
 const volleybal = require('volleyball')
-//const i2c = require('i2c-bus')
-
+const i2c = require('i2c-bus')
+const cors = require('cors')
 
 const app = express()
-const server = require('http').Server(app)
+const server = require('http').createServer(app)
 const io = require('socket.io')(server)
-
+app.use(cors())
 
 app.use(volleybal)
 app.use(express.static('public'))
 const port = process.env.PORT || 3000
+
+let i2c1
 
 // app.get('/', (req,res)=> {
 //     res.json("Hello from server")
@@ -23,14 +25,14 @@ const getStatus = (communicator)=>{
 io.on('connection', function(socket) {
   let timerID // create timer for the scheduled updates
   // i2c communications
-  const i2c1 = i2c.openSync(1)
+  i2c1 = i2c.openSync(1)
   console.log('new connection')
   const pressure = 0
   timerID = setInterval(() => {
     console.log('message from internal')
-    const currentStatus = getStatus(ic21)
+    const currentStatus = getStatus(i2c1)
     socket.emit('updateStatus',currentStatus)
-  }, 1000);
+  }, 3000);
 
   socket.on('disconnect', function(){
     console.log('closed connection')

@@ -7,8 +7,9 @@ function App() {
   const [currentPressure, setCurrentPressure] = useState(0)
   const [isPumpOn, setIsPumpOn] = useState(0)
 
-  const socket = io("http://localhost:3000")
-
+  //const socket = io("http://localhost:3000")
+  const socket = io()
+	
   socket.on('updateStatus', function(data) {
     setCurrentPressure(data)
   })
