@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import io from 'socket.io-client'
 
 function App() {
+
+  const [currentPressure, setCurrentPressure] = useState(0)
+  const [isPumpOn, setIsPumpOn] = useState(0)
+
+  const socket = io("http://localhost:3000")
+
+  socket.on('updateStatus', function(data) {
+    setCurrentPressure(data)
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+   <>
+   <button style={{float:'right', height:'50px'}} >Turn on Pump</button>
+    <h1>Pool Control</h1>
+    
+    <hr/>
+    <h2>Status of the Pool Equipment</h2>
+    <div>
+      <h3>Filter Pressure (psi):</h3>
+      <h3 className="status"> {currentPressure} psi </h3>
     </div>
+    <div>
+      <h3>Pool Pump (On/Off):</h3>
+      <h3 className="status"> {isPumpOn ? "ON" : "OFF"} </h3>
+    </div>
+    <hr />
+    <h2>Control</h2>
+    
+   </>
   );
 }
 
