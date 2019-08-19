@@ -20,9 +20,9 @@ const GETSTATUS_CMD = 0x09
 
 
 const getStatus = (communicator)=>{
-  const data = communicator.readByteSync(ARDUINO_ADDRESS,GETSTATUS_CMD)
-  console.table(data) // Need to see what go I get
-  return data
+  const myBuffer = Buffer.alloc(2)
+  const data = communicator.i2cReadSync(ARDUINO_ADDRESS,2,myBuffer)
+  return myBuffer
 }
 
 const controlPump = (communicator, newStatus) => {
@@ -30,17 +30,19 @@ const controlPump = (communicator, newStatus) => {
   // TODO: need to implement this function
 }
 
-io.on('connection', function(socket) {
+io.once('connection', function(socket) { // io.once is used to avoid double connection
   let timerID // create timer for the scheduled updates
   // i2c communications
   i2c1 = i2c.openSync(1)
   console.log('new connection')
   const pressure = 0
   timerID = setInterval(() => {
-    console.log('message from internal')
+    //console.log('message from internal, id: ' + socket.id)
     const currentStatus = getStatus(i2c1)
-    socket.emit('updateStatus',currentStatus)
-  }, 3000);
+    const pressure = currentStatus[0]
+    const pumpStatus = currentStatus[1]
+    socket.emit('updateStatus',pressure, pumpStatus)
+  }, 2000);
 
   socket.on('disconnect', function(){
     console.log('closed connection')
@@ -52,13 +54,5 @@ io.on('connection', function(socket) {
 
 server.listen(port, ()=> {
   console.log(`Server listening on port ${port}`)
-  // const i2c1 = i2c.openSync(1)
-  // i2c1.writeByteSync(0x04,0x08,0x01)
-  // setTimeout(()=>{
-  //   const value = i2c1.readByteSync(0x04,0x09)
-  //   console.log(value)
-  // },3000)
-  // i2c1.closeSync()
-
 })
 

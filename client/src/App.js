@@ -10,8 +10,10 @@ function App() {
   //const socket = io("http://localhost:3000")
   const socket = io()
 	
-  socket.on('updateStatus', function(data) {
-    setCurrentPressure(data)
+  socket.on('updateStatus', function(pressure, pumpStatus) {
+    setCurrentPressure(pressure)
+    setIsPumpOn(pumpStatus)
+    //console.table(data)
   })
 
   return (
