@@ -14,12 +14,20 @@ const port = process.env.PORT || 3000
 
 let i2c1
 
-// app.get('/', (req,res)=> {
-//     res.json("Hello from server")
-// })
+const ARDUINO_ADDRESS = 0x04
+const CONTROL_PUMP = 0x06 // with this command need to send a buffer with an extra byte
+const GETSTATUS_CMD = 0x09
+
 
 const getStatus = (communicator)=>{
-  return communicator.readByteSync(0x04,0x09)
+  const data = communicator.readByteSync(ARDUINO_ADDRESS,GETSTATUS_CMD)
+  console.table(data) // Need to see what go I get
+  return data
+}
+
+const controlPump = (communicator, newStatus) => {
+  // New status must be 0x01 for ON or 0x00 for OFF
+  // TODO: need to implement this function
 }
 
 io.on('connection', function(socket) {
