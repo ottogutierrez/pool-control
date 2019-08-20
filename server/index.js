@@ -27,7 +27,11 @@ const getStatus = (communicator)=>{
 
 const controlPump = (communicator, newStatus) => {
   // New status must be 0x01 for ON or 0x00 for OFF
-  // TODO: need to implement this function
+  const myBuffer = Buffer.alloc(2)
+  myBuffer[0] = CONTROL_PUMP
+  myBuffer[1] = newStatus
+  const dataWritten = communicator.i2cWriteSync(ARDUINO_ADDRESS,2,myBuffer)
+  return dataWritten //just to verify it was correct
 }
 
 io.once('connection', function(socket) { // io.once is used to avoid double connection
