@@ -34,6 +34,7 @@ const controlPump = (communicator, newStatus) => {
   return dataWritten //just to verify it was correct
 }
 
+// Socket communication between server and front-end
 io.once('connection', function(socket) { // io.once is used to avoid double connection
   let timerID // create timer for the scheduled updates
   // i2c communications
@@ -48,6 +49,11 @@ io.once('connection', function(socket) { // io.once is used to avoid double conn
     socket.emit('updateStatus',pressure, pumpStatus)
   }, 2000);
 
+  socket.on('controlPump', function (newStatus) {
+    const bytesWritten = controlPump(i2c1)
+    // TODO check for errors
+  })
+
   socket.on('disconnect', function(){
     console.log('closed connection')
     clearInterval(timerID)
@@ -55,7 +61,7 @@ io.once('connection', function(socket) { // io.once is used to avoid double conn
   })
 })
 
-
+// Start the server
 server.listen(port, ()=> {
   console.log(`Server listening on port ${port}`)
 })

@@ -16,9 +16,17 @@ function App() {
     //console.table(data)
   })
 
+  const toggleStatus = () => {
+    socket.emit('controlPump')
+    // TODO: implemente a way of show the user the turn on / off sequence has started
+  }
+
   return (
    <>
-   <button style={{float:'right', height:'50px'}} >Turn on Pump</button>
+   <button 
+      style={{float:'right', height:'50px'}} 
+      onClick = {toggleStatus()}  
+    >Turn on Pump</button>
     <h1>Pool Control</h1>
     
     <hr/>
